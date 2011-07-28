@@ -1,4 +1,5 @@
 #include <iostream>
+#include "stone.h"
 using namespace std;
 template <class T> class List {
     public:
@@ -71,27 +72,6 @@ template <class T> class List {
     private:
         T *_pointer;
         List *_next;
-};
-class Stone {
-    public:
-        Stone() { _colour='.'; };
-        void setCoordinates(int i, int j) {
-            _i=i;
-            _j=j;
-            return;
-        };
-        bool nextTo(Stone &stone) {
-            int i=_i-stone._i;
-            int j=_j-stone._j;
-            int d=i*i+j*j;
-            return (d==1);
-        };
-        char colour() const { return _colour; };
-        char &colour() { return _colour; };
-    private:
-        char _colour;
-        int _i;
-        int _j;
 };
 class Group {
     public:
@@ -269,14 +249,14 @@ class Goban {
             cerr.flush();
             return;
         };
-        void addStone(int i, int j, char colour) {
+        bool addStone(int i, int j, char colour) {
             if(i<0||i>_size-1||j<0||j>_size-1) {
                 cerr << "Out of bounds !" << endl;
-                return;
+                return false;
             }
             if(_goban[i][j].colour()!='.') {
                 cerr << "Occupied node !" << endl;
-                return;
+                return false;
             }
             _goban[i][j].colour()=colour;
             List<Stone> freedom;
@@ -320,7 +300,7 @@ class Goban {
                 _black.jail(_goban[i][j]);
                 dead(_black,_white);
             }
-            return;
+            return true;
         };
         void merge(List<Group> &other) {
             for(List<Group> *it=&other;it!=0;it=it->next()) {
@@ -348,6 +328,7 @@ class Goban {
                 }
             }
         };
+        Stone **stones() { return _goban; };
     private:
         Stone **_goban;
         List<Group> _white;
