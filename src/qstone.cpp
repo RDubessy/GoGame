@@ -3,7 +3,6 @@
 #include <QToolTip>
 #include <QGraphicsWidget>
 
-
 #include "qstone.h"
 QRectF QStone::boundingRect() const {
     return QRectF(-_size,-_size,2*_size,2*_size);

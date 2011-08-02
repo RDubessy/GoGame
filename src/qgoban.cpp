@@ -18,6 +18,8 @@ QGoban::QGoban(QWidget *parent) : QMainWindow(parent), ui(new Ui::QGoban) {
     connect(ui->action_New,SIGNAL(triggered()),this,SLOT(newGame()));
     connect(ui->action_Save,SIGNAL(triggered()),this,SLOT(saveGame()));
     connect(ui->action_Open,SIGNAL(triggered()),this,SLOT(openGame()));
+    connect(ui->pushButtonUndo,SIGNAL(clicked()),this,SLOT(undoMove()));
+    connect(ui->pushButtonPass,SIGNAL(clicked()),this,SLOT(passTurn()));
     setCentralWidget(_gobanView);
 }
 QGoban::~QGoban() {
@@ -102,5 +104,16 @@ void QGoban::replay(const QStringList &game) {
         else _turn='b';
         selectNode(line.at(1).toInt(),line.at(2).toInt());
     }
+}
+void QGoban::undoMove() {
+    if(_game->size()==1)
+        return;
+    QStringList game(*_game);
+    game.removeLast();
+    replay(game);
+}
+void QGoban::passTurn() {
+    if(_turn=='b') _turn='w';
+    else _turn='b';
 }
 /* qgoban.cpp */

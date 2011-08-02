@@ -20,6 +20,8 @@ public slots:
     void newGame();
     void saveGame();
     void openGame();
+    void undoMove();
+    void passTurn();
 protected:
     void changeEvent(QEvent *e);
 

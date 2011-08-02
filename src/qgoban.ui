@@ -122,6 +122,20 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonUndo">
+       <property name="text">
+        <string>Undo</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonPass">
+       <property name="text">
+        <string>Pass</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>

@@ -67,9 +67,11 @@ void QGobanView::redraw(Stone **goban) {
                 QStone *stone=new QStone(goban[i][j].colour(),stonesize);
                 scene()->addItem(stone);
                 stone->setPos(_margin+i*_spacing,_margin+j*_spacing);
-                stone->setToolTip(tr("#stones : %1\n#freedom : %2\n")
+                /*
+                stone->setToolTip(tr("#stones : %1\n#freedom : %2")
                                   .arg(goban[i][j].group()->stones()->size())
                                   .arg(goban[i][j].group()->freedom()->size()));
+                */
             }
         }
     }
