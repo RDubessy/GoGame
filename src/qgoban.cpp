@@ -35,6 +35,10 @@ void QGoban::init(int size) {
     _turn='b';
     _gobanView->init(size);
     _gobanView->redraw(_goban->stones());
+    //Update scores
+    ui->lcdNumberBlack->display(_goban->score('b'));
+    ui->lcdNumberWhite->display(_goban->score('w'));
+    _game->clear();
     _game->append(tr("Goban %1x%1").arg(size));
 }
 void QGoban::changeEvent(QEvent *e) {
@@ -71,7 +75,7 @@ void QGoban::newGame() {
     init(size.split("x").at(0).toInt());
 }
 void QGoban::saveGame() {
-    QString filename=QFileDialog::getSaveFileName(this,tr("Save Game"),"/untilted.gogame",tr("Go Game Files (*.gogame)"));
+    QString filename=QFileDialog::getSaveFileName(this,tr("Save Game"),"./untilted.gogame",tr("Go Game Files (*.gogame)"));
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
@@ -96,7 +100,6 @@ void QGoban::openGame() {
     replay(newGame);
 }
 void QGoban::replay(const QStringList &game) {
-    _game->clear();
     init(game.at(0).split(" ").at(1).split("x").at(0).toInt());
     for(int i=1;i<game.size();i++) {
         QStringList line=game.at(i).split(" ");
