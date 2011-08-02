@@ -5,8 +5,9 @@
 class QGobanView : public QGraphicsView {
     Q_OBJECT
 public:
-    QGobanView(int size = 19,QWidget *parent = 0);
+    QGobanView(QWidget *parent = 0);
     void redraw(Stone **goban);
+    void init(int size);
 signals:
     void nodeSelected(int i, int j);
 public slots:

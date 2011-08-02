@@ -3,19 +3,24 @@
 #include <QMessageBox>
 #include <QString>
 #include "qgobanview.h"
-QGobanView::QGobanView(int size, QWidget *parent) : QGraphicsView(parent) {
-    _size=size;
-    _margin=9*25./_size;
-    _spacing=9*50./_size;
+#include "qstone.h"
+#include "goban.h"
+QGobanView::QGobanView(QWidget *parent) : QGraphicsView(parent) {
     QGraphicsScene *scene = new QGraphicsScene(this);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(0,0,450,450);
     setScene(scene);
     setCacheMode(CacheBackground);
-    setViewportUpdateMode(BoundingRectViewportUpdate);
+    setViewportUpdateMode(FullViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
     setResizeAnchor(AnchorViewCenter);
+}
+void QGobanView::init(int size) {
+    _size=size;
+    _margin=9*25./_size;
+    _spacing=9*50./_size;
+    resetCachedContent();
 }
 void QGobanView::drawBackground(QPainter *painter, const QRectF &rect)
 {
@@ -51,18 +56,20 @@ void QGobanView::mousePressEvent(QMouseEvent *event) {
         int j=(int)(point.y()/_spacing);
         emit nodeSelected(i,j);
     }
+    QGraphicsView::mousePressEvent(event);
 }
 void QGobanView::redraw(Stone **goban) {
-    this->scene()->clear();
+    scene()->clear();
     qreal stonesize=9*25/_size;
     for(int i=0;i<_size;i++) {
         for(int j=0;j<_size;j++) {
-            if(goban[i][j].colour()=='b') {
-                QRectF rect(_margin+i*_spacing-stonesize,_margin+j*_spacing-stonesize,2*stonesize,2*stonesize);
-                this->scene()->addEllipse(rect,QPen(QColor("black")),QBrush(Qt::SolidPattern));
-            } else if(goban[i][j].colour()=='w') {
-                QRectF rect(_margin+i*_spacing-stonesize,_margin+j*_spacing-stonesize,2*stonesize,2*stonesize);
-                this->scene()->addEllipse(rect,QPen(QColor("lightGray")),QBrush(QColor("white"),Qt::SolidPattern));
+            if(goban[i][j].colour()!='.') {
+                QStone *stone=new QStone(goban[i][j].colour(),stonesize);
+                scene()->addItem(stone);
+                stone->setPos(_margin+i*_spacing,_margin+j*_spacing);
+                stone->setToolTip(tr("#stones : %1\n#freedom : %2\n")
+                                  .arg(goban[i][j].group()->stones()->size())
+                                  .arg(goban[i][j].group()->freedom()->size()));
             }
         }
     }

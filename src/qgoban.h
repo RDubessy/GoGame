@@ -11,8 +11,11 @@ class QGoban : public QMainWindow, public Goban {
 public:
     QGoban(QWidget *parent = 0);
     ~QGoban();
+    void init(int size);
 public slots:
     void selectNode(int i, int j);
+    void about();
+    void newGame();
 protected:
     void changeEvent(QEvent *e);
 

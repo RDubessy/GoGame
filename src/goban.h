@@ -1,3 +1,5 @@
+#ifndef GOBAN_H
+#define GOBAN_H
 #include <iostream>
 #include "stone.h"
 using namespace std;
@@ -97,6 +99,8 @@ class Group {
             return false;
         };
         List<Stone> *stones() { return &_stones; };
+        List<Stone> *freedom() { return &_freedom; };
+        List<Stone> *jail() { return &_jail; };
         void jail(Stone &stone) {
             if(_freedom.remove(stone))
                 _jail.append(stone);
@@ -109,6 +113,12 @@ class Group {
                     _freedom.append(*stone);
             }
             return;
+        };
+        void setGroup() {
+            for(List<Stone> *it=&_stones;it!=0;it=it->next()) {
+                if(it->pointer()!=0)
+                    it->pointer()->setGroup(this);
+            }
         };
     private:
         List<Stone> _stones;
@@ -293,13 +303,15 @@ class Goban {
                 _black.add(_goban[i][j],freedom,jail);
                 merge(_black);
                 _white.jail(_goban[i][j]);
-                dead(_white,_black);
+                _whiteCaptured+=dead(_white,_black);
             } else {
                 _white.add(_goban[i][j],freedom,jail);
                 merge(_white);
                 _black.jail(_goban[i][j]);
-                dead(_black,_white);
+                _blackCaptured+=dead(_black,_white);
             }
+            setGroup(_white);
+            setGroup(_black);
             return true;
         };
         void merge(List<Group> &other) {
@@ -309,26 +321,42 @@ class Goban {
                     Group *g2=tmp->pointer();
                     if(g1->stones()->isConnected(*(g2->stones()))) {
                         g1->stones()->merge(*(g2->stones()));
+                        g1->freedom()->merge(*(g2->freedom()));
+                        g1->jail()->merge(*(g2->jail()));
                         other.remove(*g2);
                     }
                 }
             }
             return;
         };
-        void dead(List<Group> &other,List<Group> &freed) {
-            if(other.pointer()==0)
-                return;
-            for(List<Group> *it=&other;it!=0;it=it->next()) {
-                Group *g1=it->pointer();
-                if(g1->isDead()) {
-                    freed.freed(g1->stones());
-                    for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
-                        tmp->pointer()->colour()='.';
-                    other.remove(*g1);
+        int dead(List<Group> &other,List<Group> &freed) {
+            int res=0;
+            if(other.pointer()!=0) {
+                for(List<Group> *it=&other;it!=0;it=it->next()) {
+                    Group *g1=it->pointer();
+                    if(g1->isDead()) {
+                        freed.freed(g1->stones());
+                        for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
+                            tmp->pointer()->colour()='.';
+                        res+=g1->stones()->size();
+                        other.remove(*g1);
+                    }
                 }
             }
+            return res;
         };
         Stone **stones() { return _goban; };
+        int score(const char color) const {
+            if(color=='w')
+                return _blackCaptured;
+            return _whiteCaptured;
+        };
+        void setGroup(List<Group> &other) {
+            for(List<Group> *it=&other;it!=0;it=it->next()) {
+                Group *g1=it->pointer();
+                g1->setGroup();
+            }
+        };
     private:
         Stone **_goban;
         List<Group> _white;
@@ -337,4 +365,5 @@ class Goban {
         int _blackCaptured;
         int _size;
 };
+#endif
 /* goban.h */

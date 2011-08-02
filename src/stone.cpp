@@ -1,4 +1,9 @@
 #include "stone.h"
+#include "goban.h"
+Stone::Stone() {
+    _colour='.';
+    _group=0;
+}
 void Stone::setCoordinates(int i, int j) {
     _i=i;
     _j=j;
