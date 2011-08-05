@@ -77,7 +77,7 @@ template <class T> class List {
 };
 class Group {
     public:
-        Group() {};
+        Group() { _isAlive=false; };
         void print() {
             _stones.print();
             cerr << " [" << _freedom.size() << "," << _jail.size() << "]";
@@ -120,10 +120,30 @@ class Group {
                     it->pointer()->setGroup(this);
             }
         };
+        bool hasTwoEyes() {
+            int eyes=0;
+            char colour=_stones.pointer()->colour();
+            for(List<Stone> *it=&_freedom;it!=0;it=it->next()) {
+                Group *group=it->pointer()->group();
+                if(colour=='w' && group->jail()->size()==0) {
+                    if(group->stones()->size()>2)
+                        return true;
+                    eyes++;
+                } else if(colour=='b' && group->freedom()->size()==0) {
+                    if(group->stones()->size()>2)
+                        return true;
+                    eyes++;
+                }
+            }
+            return (eyes>1);
+        };
+        bool &isAlive() { return _isAlive; };
+        bool isAlive() const { return _isAlive; };
     private:
         List<Stone> _stones;
         List<Stone> _freedom;
         List<Stone> _jail;
+        bool _isAlive;
 };
 template <> class List<Group> {
     public:
@@ -223,6 +243,14 @@ template <> class List<Group> {
             for(List *it=this;it!=0;it=it->_next)
                 it->_pointer->freed(stones);
             return;
+        };
+        bool isMember(Group &other) {
+            if(_pointer==0)
+                return false;
+            for(List *it=this;it!=0;it=it->_next)
+                if(it->_pointer==&other)
+                    return true;
+            return false;
         };
     private:
         Group *_pointer;
@@ -329,12 +357,12 @@ class Goban {
             }
             return;
         };
-        int dead(List<Group> &other,List<Group> &freed) {
+        int dead(List<Group> &other,List<Group> &freed, bool isAtari=false) {
             int res=0;
             if(other.pointer()!=0) {
                 for(List<Group> *it=&other;it!=0;it=it->next()) {
                     Group *g1=it->pointer();
-                    if(g1->isDead()) {
+                    if(g1->isDead() || (isAtari && g1->freedom()->size()==1)) {
                         freed.freed(g1->stones());
                         for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
                             tmp->pointer()->colour()='.';
@@ -355,6 +383,125 @@ class Goban {
             for(List<Group> *it=&other;it!=0;it=it->next()) {
                 Group *g1=it->pointer();
                 g1->setGroup();
+            }
+        };
+        void buildTerritory(List<Group> &territory) {
+            for(int i=0;i<_size;i++) {
+                for(int j=0;j<_size;j++) {
+                    if(_goban[i][j].colour()=='.') {
+                        List<Stone> black;
+                        List<Stone> white;
+                        if(i>0) {
+                            Stone *stone=&_goban[i-1][j];
+                            if(stone->colour()=='w')
+                                white.append(*stone);
+                            else if(stone->colour()=='b')
+                                black.append(*stone);
+                        }
+                        if(i<_size-1) {
+                            Stone *stone=&_goban[i+1][j];
+                            if(stone->colour()=='w')
+                                white.append(*stone);
+                            else if(stone->colour()=='b')
+                                black.append(*stone);
+                        }
+                        if(j>0) {
+                            Stone *stone=&_goban[i][j-1];
+                            if(stone->colour()=='w')
+                                white.append(*stone);
+                            else if(stone->colour()=='b')
+                                black.append(*stone);
+                        }
+                        if(j<_size-1) {
+                            Stone *stone=&_goban[i][j+1];
+                            if(stone->colour()=='w')
+                                white.append(*stone);
+                            else if(stone->colour()=='b')
+                                black.append(*stone);
+                        }
+                        //For this groups, freedom == white, jail == black.
+                        territory.add(_goban[i][j],white,black);
+                        //Add stone to territory
+                        //Merge
+                        merge(territory);
+                    }
+                }
+            }
+            setGroup(territory);
+        };
+        void endGame(int &white, int &black, int &dame) {
+            //Remove atari
+            _whiteCaptured+=dead(_white,_black,true);
+            _blackCaptured+=dead(_black,_white,true);
+            //Build territories
+            List<Group> territory;
+            buildTerritory(territory);
+            //Mark alive groups
+            aliveGroup(_white);
+            aliveGroup(_black);
+            //Remove captured stones
+            _whiteCaptured+=deadGroup(_white,_black);
+            _blackCaptured+=deadGroup(_black,_white);
+            List<Group> finalTerritory;
+            buildTerritory(finalTerritory);
+            //Scores
+            white=-_whiteCaptured;
+            black=-_blackCaptured;
+            dame=0;
+            for(List<Group> *it=&finalTerritory;it!=0;it=it->next()) {
+                Group *group=it->pointer();
+                int score=group->stones()->size();
+                if(group->freedom()->size()==0) black+=score;
+                else if(group->jail()->size()==0) white+=score;
+                else dame+=score;
+            }
+        };
+        int deadGroup(List<Group> &other,List<Group> &freed) {
+            int res=0;
+            if(other.pointer()!=0) {
+                for(List<Group> *it=&other;it!=0;it=it->next()) {
+                    Group *g1=it->pointer();
+                    if(!(g1->isAlive())) {
+                        //Count freedom : build list of concerned groups, compare # of freedom
+                        List<Group> whiteGroups;
+                        List<Group> blackGroups;
+                        for(List<Stone> *it1=g1->freedom();it1!=0;it1=it1->next()) {
+                            Stone *stone=it1->pointer();
+                            for(List<Stone> *it2=stone->group()->freedom();(it2!=0 && it2->pointer()!=0);it2=it2->next()) {
+                                whiteGroups.append(*(it2->pointer()->group()));
+                            }
+                            for(List<Stone> *it2=stone->group()->jail();(it2!=0 && it2->pointer()!=0);it2=it2->next()) {
+                                blackGroups.append(*(it2->pointer()->group()));
+                            }
+                        }
+                        int white=0;
+                        int black=0;
+                        for(List<Group> *it1=&whiteGroups;it1!=0;it1=it1->next()) {
+                            white+=it1->pointer()->freedom()->size();
+                        }
+                        for(List<Group> *it1=&blackGroups;it1!=0;it1=it1->next()) {
+                            black+=it1->pointer()->freedom()->size();
+                        }
+                        char color=g1->stones()->pointer()->colour();
+                        if((color=='b' && white>black) || (color=='w' && black>white)) {
+                            freed.freed(g1->stones());
+                            for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
+                                tmp->pointer()->colour()='.';
+                            res+=g1->stones()->size();
+                            other.remove(*g1);
+                        }
+                    }
+                }
+            }
+            return res;
+        };
+        void aliveGroup(List<Group> &other) {
+            if(other.pointer()!=0) {
+                for(List<Group> *it=&other;it!=0;it=it->next()) {
+                    Group *g1=it->pointer();
+                    if(g1->hasTwoEyes())
+                        g1->isAlive()=true;
+                }
             }
         };
     private:

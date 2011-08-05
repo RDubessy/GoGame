@@ -5,14 +5,20 @@
 #include <QTextStream>
 #include "qgoban.h"
 #include "ui_qgoban.h"
+#include "goban.h"
 #include "qgobanview.h"
 QGoban::QGoban(QWidget *parent) : QMainWindow(parent), ui(new Ui::QGoban) {
     ui->setupUi(this);
     _gobanView=new QGobanView(this);
     _game=new QStringList();
     _goban=0;
+    _endgame=false;
     init(13);
+    _menu=new QMenu(this);
+    _menu->addAction(tr(""));
+    _menu->addAction(tr(""));
     connect(_gobanView,SIGNAL(nodeSelected(int,int)),this,SLOT(selectNode(int,int)));
+    connect(_gobanView,SIGNAL(stoneSelected(int,int,QPoint)),this,SLOT(selectStone(int,int,QPoint)));
     connect(ui->action_About,SIGNAL(triggered()),this,SLOT(about()));
     connect(ui->action_Quit,SIGNAL(triggered()),this,SLOT(close()));
     connect(ui->action_New,SIGNAL(triggered()),this,SLOT(newGame()));
@@ -27,6 +33,7 @@ QGoban::~QGoban() {
     delete _goban;
     delete _gobanView;
     delete _game;
+    delete _menu;
 }
 void QGoban::init(int size) {
     if(_goban!=0)
@@ -53,6 +60,7 @@ void QGoban::changeEvent(QEvent *e) {
 }
 void QGoban::selectNode(int i,int j) {
     if(_goban->addStone(i,j,_turn)) {
+        _endgame=false;
         _gobanView->redraw(_goban->stones());
         //Update scores
         ui->lcdNumberBlack->display(_goban->score('b'));
@@ -63,6 +71,14 @@ void QGoban::selectNode(int i,int j) {
         //Select next player
         if(_turn=='b') _turn='w';
         else _turn='b';
+    }
+}
+void QGoban::selectStone(int i, int j, const QPoint &pos) {
+    Stone *stone=&_goban->stones()[i][j];
+    if(stone->colour()!='.') {
+        _menu->actions().at(0)->setText(tr("# of freedom : %1").arg(stone->group()->freedom()->size()));
+        _menu->actions().at(1)->setText(tr("# of stones : %1").arg(stone->group()->stones()->size()));
+        _menu->exec(pos);
     }
 }
 void QGoban::about() {
@@ -116,7 +132,17 @@ void QGoban::undoMove() {
     replay(game);
 }
 void QGoban::passTurn() {
+    if(_endgame) {
+        int white,black,dame;
+        _goban->endGame(white,black,dame);
+        _gobanView->redraw(_goban->stones());
+        //Update scores
+        ui->lcdNumberBlack->display(_goban->score('b'));
+        ui->lcdNumberWhite->display(_goban->score('w'));
+        QMessageBox::information(this,tr("End Game"),tr("White : %1\nBlack : %2\nDame : %3\n%4 wins !").arg(white).arg(black).arg(dame).arg(white>black?tr("White"):tr("Black")));
+    }
     if(_turn=='b') _turn='w';
     else _turn='b';
+    _endgame=true;
 }
 /* qgoban.cpp */

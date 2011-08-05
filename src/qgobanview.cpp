@@ -49,14 +49,21 @@ void QGobanView::drawBackground(QPainter *painter, const QRectF &rect)
     }
 }
 void QGobanView::mousePressEvent(QMouseEvent *event) {
-    if(event->button()==Qt::LeftButton) {
-        QPointF point=mapToScene(event->pos());
-        //Convert to coordinates.
-        int i=(int)(point.x()/_spacing);
-        int j=(int)(point.y()/_spacing);
-        emit nodeSelected(i,j);
+    QPointF point=mapToScene(event->pos());
+    //Convert to coordinates.
+    int i=(int)(point.x()/_spacing);
+    int j=(int)(point.y()/_spacing);
+    switch(event->button()) {
+        case Qt::LeftButton :
+            emit nodeSelected(i,j);
+            break;
+        case Qt::RightButton :
+            emit stoneSelected(i,j,event->globalPos());
+            break;
+        default:
+            break;
     }
-    QGraphicsView::mousePressEvent(event);
+    //QGraphicsView::mousePressEvent(event);
 }
 void QGobanView::redraw(Stone **goban) {
     scene()->clear();

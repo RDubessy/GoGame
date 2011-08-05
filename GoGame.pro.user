@@ -76,7 +76,7 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-zU8nQbEcPb,guid=3d203a2382d2fabe6174411400000030</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-YQrlFirwWE,guid=68ae15b495a3e9ea73510ae0000000e0</value>
     <value type="QString">DISPLAY=:0.0</value>
     <value type="QString">GTK_MODULES=canberra-gtk-module</value>
     <value type="QString">HOME=/home/romain</value>
@@ -86,13 +86,13 @@
     <value type="QString">PATH=/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/games</value>
     <value type="QString">PWD=/home/romain</value>
     <value type="QString">QTDIR=/usr/share/qt4</value>
-    <value type="QString">SESSION_MANAGER=local/deiPC:@/tmp/.ICE-unix/1772,unix/deiPC:/tmp/.ICE-unix/1772</value>
+    <value type="QString">SESSION_MANAGER=local/deiPC:@/tmp/.ICE-unix/2995,unix/deiPC:/tmp/.ICE-unix/2995</value>
     <value type="QString">SHELL=/bin/bash</value>
-    <value type="QString">SSH_AGENT_PID=1697</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-nJAmBE1682/agent.1682</value>
+    <value type="QString">SSH_AGENT_PID=2920</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-pgDTFz2905/agent.2905</value>
     <value type="QString">USER=romain</value>
     <value type="QString">WINDOWPATH=7</value>
-    <value type="QString">XDG_SESSION_COOKIE=5a4165f0be9e56f212aa8be80000014b-1312056656.481043-634984430</value>
+    <value type="QString">XDG_SESSION_COOKIE=5a4165f0be9e56f212aa8be80000014b-1312471356.104394-408630112</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList">
     <value type="QString">/home/romain/Projets/GoGame/GoGame.pro</value>
@@ -111,7 +111,7 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-zU8nQbEcPb,guid=3d203a2382d2fabe6174411400000030</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-YQrlFirwWE,guid=68ae15b495a3e9ea73510ae0000000e0</value>
     <value type="QString">DISPLAY=:0.0</value>
     <value type="QString">GTK_MODULES=canberra-gtk-module</value>
     <value type="QString">HOME=/home/romain</value>
@@ -121,13 +121,13 @@
     <value type="QString">PATH=/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/games</value>
     <value type="QString">PWD=/home/romain</value>
     <value type="QString">QTDIR=/usr/share/qt4</value>
-    <value type="QString">SESSION_MANAGER=local/deiPC:@/tmp/.ICE-unix/1772,unix/deiPC:/tmp/.ICE-unix/1772</value>
+    <value type="QString">SESSION_MANAGER=local/deiPC:@/tmp/.ICE-unix/2995,unix/deiPC:/tmp/.ICE-unix/2995</value>
     <value type="QString">SHELL=/bin/bash</value>
-    <value type="QString">SSH_AGENT_PID=1697</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-nJAmBE1682/agent.1682</value>
+    <value type="QString">SSH_AGENT_PID=2920</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-pgDTFz2905/agent.2905</value>
     <value type="QString">USER=romain</value>
     <value type="QString">WINDOWPATH=7</value>
-    <value type="QString">XDG_SESSION_COOKIE=5a4165f0be9e56f212aa8be80000014b-1312056656.481043-634984430</value>
+    <value type="QString">XDG_SESSION_COOKIE=5a4165f0be9e56f212aa8be80000014b-1312471356.104394-408630112</value>
    </valuelist>
    <value key="abstractProcess.IgnoreReturnValue" type="bool">false</value>
    <valuelist key="abstractProcess.arguments" type="QVariantList">

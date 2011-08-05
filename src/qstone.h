@@ -3,14 +3,9 @@
 
 #include <QGraphicsItem>
 
-class QGraphicsSceneMouseEvent;
-
 class QStone : public QGraphicsItem {
 public:
-    QStone(char color, qreal size) {
-        _color=color;
-        _size=size;
-    };
+    QStone(char color, qreal size);
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

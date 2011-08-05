@@ -10,6 +10,7 @@ public:
     void init(int size);
 signals:
     void nodeSelected(int i, int j);
+    void stoneSelected(int i, int j, const QPoint &pos);
 public slots:
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);

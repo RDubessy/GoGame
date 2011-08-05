@@ -1,9 +1,9 @@
 #include <QPainter>
-#include <QGraphicsSceneMouseEvent>
-#include <QToolTip>
-#include <QGraphicsWidget>
-
 #include "qstone.h"
+QStone::QStone(char color, qreal size) {
+    _color=color;
+    _size=size;
+};
 QRectF QStone::boundingRect() const {
     return QRectF(-_size,-_size,2*_size,2*_size);
 }
