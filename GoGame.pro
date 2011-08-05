@@ -10,11 +10,17 @@ OBJECTS_DIR = obj
 SOURCES += src/main.cpp \
     src/qgoban.cpp \
     src/qgobanview.cpp \
+    src/qstone.cpp \
     src/stone.cpp \
-    src/qstone.cpp
+    src/group.cpp \
+    src/listofgroups.cpp \
+    src/goban.cpp
 HEADERS += src/qgoban.h \
-    src/goban.h \
     src/qgobanview.h \
+    src/qstone.h \
     src/stone.h \
-    src/qstone.h
+    src/list.h \
+    src/group.h \
+    src/listofgroups.h \
+    src/goban.h
 FORMS += src/qgoban.ui
