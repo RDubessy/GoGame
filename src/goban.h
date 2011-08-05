@@ -69,8 +69,18 @@ template <class T> class List {
                     res++;
             return res;
         };
+        bool isMember(const T &other) {
+            if(_pointer==0)
+                return false;
+            for(List *it=this;it!=0;it=it->_next)
+                if(it->_pointer==&other)
+                    return true;
+            return false;
+        };
         T *pointer() { return _pointer; };
         List *next() { return _next; };
+        void setPointer(T *pointer) { _pointer=pointer; };
+        void setNext(List *next) { _next=next; };
     private:
         T *_pointer;
         List *_next;
@@ -145,116 +155,55 @@ class Group {
         List<Stone> _jail;
         bool _isAlive;
 };
-template <> class List<Group> {
+class ListOfGroups : public List<Group> {
     public:
-        List() {
-            _pointer=0;
-            _next=0;
-        };
+        ListOfGroups() : List<Group>() { };
         void print() {
-            for(List *it=this;it!=0;it=it->_next) {
-                cerr << it->_pointer << ": ";
-                if(it->_pointer!=0)
-                    it->_pointer->print();
+            for(List<Group> *it=this;it!=0;it=it->next()) {
+                cerr << it->pointer() << ": ";
+                if(it->pointer()!=0)
+                    it->pointer()->print();
                 cerr << "\n";
             }
         };
-        bool append(Group &value) {
-            if(_pointer==0) {
-                _pointer=&value;
-                return true;
-            }
-            List *last=this;
-            for(List *it=this;it!=0;it=it->_next) {
-                if(it->_pointer==&value)
-                    return false;
-                last=it;
-            }
-            last->_next=new List;
-            last->_next->_pointer=&value;
-            return true;
-        };
-        bool remove(const Group &value) {
-            bool res=false;
-            List *old=this;
-            for(List *it=this;it!=0;it=it->_next) {
-                if(it->_pointer==&value) {
-                    if(it==this) {
-                        if(_next!=0) {
-                            _pointer=_next->_pointer;
-                            _next=_next->_next;
-                        } else
-                            _pointer=0;
-                    } else {
-                        old->_next=it->_next;
-                    }
-                    return true;
-                } else
-                    old=it;
-            }
-            return res;
-        };
-        void merge(List &other) {
-            if(other._pointer!=0) {
-                for(List *it=&other;it!=0;it=it->_next)
-                    append(*(it->_pointer));
-            }
-        };
-        int size() {
-            int res=0;
-            for(List *it=this;it!=0;it=it->_next)
-                if(it->_pointer!=0)
-                    res++;
-            return res;
-        };
-        Group *pointer() { return _pointer; };
-        List *next() { return _next; };
         bool add(Stone &stone,List<Stone> &freedom,List<Stone> &jail) {
-            if(_pointer==0) {
-                _pointer=new Group;
-                return _pointer->add(stone,freedom,jail);
+            if(pointer()==0) {
+                Group *group=new Group;
+                setPointer(group);
+                return pointer()->add(stone,freedom,jail);
             }
-            List *last=this;
+            List<Group> *last=this;
             bool inserted=false;
-            for(List *it=this;it!=0;it=it->_next) {
-                if(it->_pointer->nextTo(stone)) {
-                    it->_pointer->add(stone,freedom,jail);
+            for(List<Group> *it=this;it!=0;it=it->next()) {
+                if(it->pointer()->nextTo(stone)) {
+                    it->pointer()->add(stone,freedom,jail);
                     inserted=true;
                 }
                 last=it;
             }
             if(!inserted) {
-                last->_next=new List;
-                last->_next->_pointer=new Group;
-                return last->_next->_pointer->add(stone,freedom,jail);
+                List<Group> *list=new List<Group>;
+                last->setNext(list);
+                Group *group=new Group;
+                last->next()->setPointer(group);
+                return last->next()->pointer()->add(stone,freedom,jail);
             }
             return inserted;
         };
         void jail(Stone &stone) {
-            if(_pointer==0)
+            if(pointer()==0)
                 return;
-            for(List *it=this;it!=0;it=it->_next)
-                it->_pointer->jail(stone);
+            for(List<Group> *it=this;it!=0;it=it->next())
+                it->pointer()->jail(stone);
             return;
         };
         void freed(List<Stone> *stones) {
-            if(_pointer==0)
+            if(pointer()==0)
                 return;
-            for(List *it=this;it!=0;it=it->_next)
-                it->_pointer->freed(stones);
+            for(List<Group> *it=this;it!=0;it=it->next())
+                it->pointer()->freed(stones);
             return;
         };
-        bool isMember(Group &other) {
-            if(_pointer==0)
-                return false;
-            for(List *it=this;it!=0;it=it->_next)
-                if(it->_pointer==&other)
-                    return true;
-            return false;
-        };
-    private:
-        Group *_pointer;
-        List *_next;
 };
 class Goban {
     public:
@@ -342,7 +291,7 @@ class Goban {
             setGroup(_black);
             return true;
         };
-        void merge(List<Group> &other) {
+        void merge(ListOfGroups &other) {
             for(List<Group> *it=&other;it!=0;it=it->next()) {
                 Group *g1=it->pointer();
                 for(List<Group> *tmp=it->next();tmp!=0;tmp=tmp->next()) {
@@ -357,7 +306,7 @@ class Goban {
             }
             return;
         };
-        int dead(List<Group> &other,List<Group> &freed, bool isAtari=false) {
+        int dead(ListOfGroups &other,ListOfGroups &freed, bool isAtari=false) {
             int res=0;
             if(other.pointer()!=0) {
                 for(List<Group> *it=&other;it!=0;it=it->next()) {
@@ -379,13 +328,13 @@ class Goban {
                 return _blackCaptured;
             return _whiteCaptured;
         };
-        void setGroup(List<Group> &other) {
+        void setGroup(ListOfGroups &other) {
             for(List<Group> *it=&other;it!=0;it=it->next()) {
                 Group *g1=it->pointer();
                 g1->setGroup();
             }
         };
-        void buildTerritory(List<Group> &territory) {
+        void buildTerritory(ListOfGroups &territory) {
             for(int i=0;i<_size;i++) {
                 for(int j=0;j<_size;j++) {
                     if(_goban[i][j].colour()=='.') {
@@ -434,7 +383,7 @@ class Goban {
             _whiteCaptured+=dead(_white,_black,true);
             _blackCaptured+=dead(_black,_white,true);
             //Build territories
-            List<Group> territory;
+            ListOfGroups territory;
             buildTerritory(territory);
             //Mark alive groups
             aliveGroup(_white);
@@ -442,7 +391,7 @@ class Goban {
             //Remove captured stones
             _whiteCaptured+=deadGroup(_white,_black);
             _blackCaptured+=deadGroup(_black,_white);
-            List<Group> finalTerritory;
+            ListOfGroups finalTerritory;
             buildTerritory(finalTerritory);
             //Scores
             white=-_whiteCaptured;
@@ -456,7 +405,7 @@ class Goban {
                 else dame+=score;
             }
         };
-        int deadGroup(List<Group> &other,List<Group> &freed) {
+        int deadGroup(ListOfGroups &other,ListOfGroups &freed) {
             int res=0;
             if(other.pointer()!=0) {
                 for(List<Group> *it=&other;it!=0;it=it->next()) {
@@ -495,7 +444,7 @@ class Goban {
             }
             return res;
         };
-        void aliveGroup(List<Group> &other) {
+        void aliveGroup(ListOfGroups &other) {
             if(other.pointer()!=0) {
                 for(List<Group> *it=&other;it!=0;it=it->next()) {
                     Group *g1=it->pointer();
@@ -506,8 +455,8 @@ class Goban {
         };
     private:
         Stone **_goban;
-        List<Group> _white;
-        List<Group> _black;
+        ListOfGroups _white;
+        ListOfGroups _black;
         int _whiteCaptured;
         int _blackCaptured;
         int _size;
