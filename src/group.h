@@ -5,17 +5,17 @@
 class Group {
     public:
         Group() { _isAlive=false; };
-        void print();
-        bool isDead() { return (_freedom.size()==0); };
-        bool add(Stone &stone,List<Stone> &freedom, List<Stone> &jail);
-        bool nextTo(Stone &stone);
+        void print() const;
+        bool isDead() const { return (_freedom.size()==0); };
+        bool add(Stone &stone,const List<Stone> &freedom, const List<Stone> &jail);
+        bool nextTo(const Stone &stone) const;
         List<Stone> *stones() { return &_stones; };
         List<Stone> *freedom() { return &_freedom; };
         List<Stone> *jail() { return &_jail; };
         void jail(Stone &stone);
-        void freed(List<Stone> *stones);
+        void freed(const List<Stone> *stones);
         void setGroup();
-        bool hasTwoEyes();
+        bool hasTwoEyes() const;
         bool &isAlive() { return _isAlive; };
         bool isAlive() const { return _isAlive; };
     private:
