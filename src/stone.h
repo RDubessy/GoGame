@@ -5,7 +5,7 @@ class Stone {
     public:
         Stone();
         void setCoordinates(int i, int j);
-        bool nextTo(Stone &stone);
+        bool nextTo(const Stone &stone);
         char colour() const { return _colour; };
         char &colour() { return _colour; };
         Group *group() { return _group; };
