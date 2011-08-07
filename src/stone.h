@@ -20,7 +20,7 @@ class Stone {
           * Returns true if the two stones are first order neighbours, false
           * otherwise.
           */
-        bool nextTo(Stone &stone);
+        bool nextTo(const Stone &stone);
         /*! Returns the stone colour. */
         char colour() const { return _colour; };
         /*! Access the stone colour. */

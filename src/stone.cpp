@@ -1,5 +1,4 @@
 #include "stone.h"
-#include "goban.h"
 Stone::Stone() {
     _colour='.';
     _group=0;
@@ -9,7 +8,7 @@ void Stone::setCoordinates(int i, int j) {
     _j=j;
     return;
 }
-bool Stone::nextTo(Stone &stone) {
+bool Stone::nextTo(const Stone &stone) {
     int i=_i-stone._i;
     int j=_j-stone._j;
     int d=i*i+j*j;
