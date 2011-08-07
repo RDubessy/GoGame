@@ -47,6 +47,34 @@ void QGobanView::drawBackground(QPainter *painter, const QRectF &rect)
         painter->drawLine(sceneRect.left()+_margin,sceneRect.top()+_margin+i*_spacing,
                           sceneRect.width()-_margin,sceneRect.top()+_margin+i*_spacing);
     }
+    //Stars
+    int size=(int)(_spacing*0.1);
+    //Always mark the center
+    painter->setBrush(Qt::SolidPattern);
+    painter->drawEllipse(QPoint(sceneRect.left()+_margin+(_size-1)/2*_spacing,
+                                 sceneRect.top()+_margin+(_size-1)/2*_spacing),size,size);
+    if(_size>=13) {
+        //Mark the corners
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+3*_spacing,
+                                     sceneRect.top()+_margin+3*_spacing),size,size);
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+(_size-4)*_spacing,
+                                     sceneRect.top()+_margin+3*_spacing),size,size);
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+(_size-4)*_spacing,
+                                     sceneRect.top()+_margin+(_size-4)*_spacing),size,size);
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+3*_spacing,
+                                     sceneRect.top()+_margin+(_size-4)*_spacing),size,size);
+    }
+    if(_size==19) {
+        //Mark the middle
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+(_size-1)/2*_spacing,
+                                     sceneRect.top()+_margin+3*_spacing),size,size);
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+(_size-1)/2*_spacing,
+                                     sceneRect.top()+_margin+(_size-4)*_spacing),size,size);
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+(_size-4)*_spacing,
+                                     sceneRect.top()+_margin+(_size-1)/2*_spacing),size,size);
+        painter->drawEllipse(QPoint(sceneRect.left()+_margin+3*_spacing,
+                                     sceneRect.top()+_margin+(_size-1)/2*_spacing),size,size);
+    }
 }
 void QGobanView::mousePressEvent(QMouseEvent *event) {
     QPointF point=mapToScene(event->pos());
@@ -74,11 +102,6 @@ void QGobanView::redraw(Stone **goban) {
                 QStone *stone=new QStone(goban[i][j].colour(),stonesize);
                 scene()->addItem(stone);
                 stone->setPos(_margin+i*_spacing,_margin+j*_spacing);
-                /*
-                stone->setToolTip(tr("#stones : %1\n#freedom : %2")
-                                  .arg(goban[i][j].group()->stones()->size())
-                                  .arg(goban[i][j].group()->freedom()->size()));
-                */
             }
         }
     }
