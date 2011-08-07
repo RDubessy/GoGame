@@ -6,7 +6,7 @@ class Goban {
     public:
         Goban(int size=19);
         ~Goban();
-        void print();
+        void print() const;
         bool addStone(int i, int j, char colour);
         void merge(ListOfGroups &other);
         int dead(ListOfGroups &other,ListOfGroups &freed, bool isAtari=false);
