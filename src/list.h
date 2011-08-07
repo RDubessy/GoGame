@@ -7,6 +7,36 @@ template <class T> class List {
             _pointer=0;
             _next=0;
         };
+        List(const List &other) {
+            List *list=this;
+            for(const List *it=&other;it!=0;it=it->_next) {
+                list->_pointer=it->_pointer;
+                if(it->_next!=0) {
+                    list->_next=new List;
+                    list=list->_next;
+                }
+            }
+            list->_next=0;
+        };
+        List &operator=(const List &other) {
+            if(&other!=this) {
+                List *list=this;
+                for(const List *it=&other;it!=0;it=it->_next) {
+                    list->_pointer=it->_pointer;
+                    if(it->_next!=0) {
+                        list->_next=new List;
+                        list=list->_next;
+                    }
+                }
+                list->_next=0;
+            }
+            return *this;
+        };
+        ~List() {
+            _pointer=0;
+            if(_next!=0)
+                delete _next;
+        };
         void print() {
             for(List *it=this;it!=0;it=it->_next)
                 std::cerr << it->_pointer << "->";
