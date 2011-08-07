@@ -14,11 +14,11 @@ class Group {
         /*! Default constructor. */
         Group() { _isAlive=false; };
         /*! Print method. */
-        void print();
+        void print() const;
         /*! Check if the group is dead.
           * Returns false if the degrees of freedom number is 0, true otherwise.
           */
-        bool isDead() { return (_freedom.size()==0); };
+        bool isDead() const { return (_freedom.size()==0); };
         /*! Add a stone to the group.
           * The stone is supposed to be connected to the group (see the Stone
           * class documentation).
@@ -26,12 +26,12 @@ class Group {
           * Returns true if the stone has been added to the group, false
           * otherwise.
           */
-        bool add(Stone &stone,List<Stone> &freedom, List<Stone> &jail);
+        bool add(Stone &stone,const List<Stone> &freedom, const List<Stone> &jail);
         /*! Checks if the stone belongs to a group.
           * The stone and the group are supposed to have the same colour.
           * Returns true if the stone is adjacent to a group, false otherwise.
           */
-        bool nextTo(Stone &stone);
+        bool nextTo(const Stone &stone) const;
         /*! Access the list of stones method. */
         List<Stone> *stones() { return &_stones; };
         /*! Access the list of freedom method. */
@@ -45,8 +45,8 @@ class Group {
         void jail(Stone &stone);
         /*!
           */
-        void freed(List<Stone> *stones);
-        /*! Ensures the all the stones in the group have the same (and only)
+        void freed(const List<Stone> *stones);
+        /*! Ensures that all the stones in the group have the same (and only)
           * group id.
           */
         void setGroup();
@@ -54,7 +54,7 @@ class Group {
           * Return true if the group has two eyes or has enough room to make two
           * eyes, false otherwise.
           */
-        bool hasTwoEyes();
+        bool hasTwoEyes() const;
         /*! Access the isAlive property of the group.
           * Only used in the endgame.
           */
