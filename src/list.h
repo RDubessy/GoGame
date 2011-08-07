@@ -1,12 +1,23 @@
 #ifndef LIST_H
 #define LIST_H
 #include <iostream>
+/*! The List class is a linked list, null terminated container.
+  * Its purpose is to store pointers to object.
+  * The list is not ordered and an object can only be referenced once (although
+  * two different objects with the same value may be stored in the same list).
+  */
 template <class T> class List {
     public:
+        /*! Default constructor.
+          * Creates an empty list.
+          */
         List() {
             _pointer=0;
             _next=0;
         };
+        /*! Copy constructor.
+          * Copy the contents of the source list.
+          */
         List(const List &other) {
             List *list=this;
             for(const List *it=&other;it!=0;it=it->_next) {
@@ -18,6 +29,9 @@ template <class T> class List {
             }
             list->_next=0;
         };
+        /*! Assignement operator.
+          * Copy the contents of the source list to the left hand side list.
+          */
         List &operator=(const List &other) {
             if(&other!=this) {
                 List *list=this;
@@ -32,16 +46,24 @@ template <class T> class List {
             }
             return *this;
         };
+        /*! Destructor.
+          */
         ~List() {
             _pointer=0;
             if(_next!=0)
                 delete _next;
         };
+        /*! Print method.
+          * Print the list on a single line on the standard error output.
+          */
         void print() {
             for(List *it=this;it!=0;it=it->_next)
                 std::cerr << it->_pointer << "->";
             std::cerr << "0";
         };
+        /*! Append method.
+          * Append an item to the list, only if the item is not already present.
+          */
         bool append(T &value) {
             if(_pointer==0) {
                 _pointer=&value;
@@ -57,6 +79,10 @@ template <class T> class List {
             last->_next->_pointer=&value;
             return true;
         };
+        /*! Remove item method.
+          * If the item is in the list, it is removed (whitout being deleted)
+          * and the list is re-ordered.
+          */
         bool remove(const T &value) {
             bool res=false;
             List *old=this;
@@ -77,12 +103,20 @@ template <class T> class List {
             }
             return res;
         };
+        /*! Merge two lists method.
+          * Merge the source List into the left hand side List, using the append
+          * method.
+          */
         void merge(List &other) {
             if(other._pointer!=0) {
                 for(List *it=&other;it!=0;it=it->_next)
                     append(*(it->_pointer));
             }
         };
+        /*! This method indicates if the intersection of two lists is non empty.
+          * It returns true if the two lists have at least one common element,
+          * false otherwise.
+          */
         bool isConnected(List &other) {
             for(List *it=this;it!=0;it=it->_next)
                 for(List *tmp=&other;tmp!=0;tmp=tmp->_next)
@@ -90,6 +124,9 @@ template <class T> class List {
                         return true;
             return false;
         };
+        /*! Computes the size of the list.
+          * (0 for empty list).
+          */
         int size() {
             int res=0;
             for(List *it=this;it!=0;it=it->_next)
@@ -97,6 +134,7 @@ template <class T> class List {
                     res++;
             return res;
         };
+        /*! Indicates if an item belongs to the list. */
         bool isMember(const T &other) {
             if(_pointer==0)
                 return false;
@@ -105,13 +143,17 @@ template <class T> class List {
                     return true;
             return false;
         };
+        /*! Return a pointer to the current item. */
         T *pointer() { return _pointer; };
+        /*! Return a pointer to the next list object. */
         List *next() { return _next; };
+        /*! Set the pointer to the current item. */
         void setPointer(T *pointer) { _pointer=pointer; };
+        /*! Set the pointer to the next list object. */
         void setNext(List *next) { _next=next; };
     private:
-        T *_pointer;
-        List *_next;
+        T *_pointer; //!< Pointer to the current item.
+        List *_next; //!< Pointer to the next list element.
 };
 #endif // LIST_H
 /* list.h */
