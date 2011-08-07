@@ -18,9 +18,9 @@ template <class T> class List {
         /*! Copy constructor.
           * Copy the contents of the source list.
           */
-        List(const List &other) {
+        List(const List &source) {
             List *list=this;
-            for(const List *it=&other;it!=0;it=it->_next) {
+            for(const List *it=&source;it!=0;it=it->_next) {
                 list->_pointer=it->_pointer;
                 if(it->_next!=0) {
                     list->_next=new List;
@@ -32,10 +32,12 @@ template <class T> class List {
         /*! Assignement operator.
           * Copy the contents of the source list to the left hand side list.
           */
-        List &operator=(const List &other) {
-            if(&other!=this) {
+        List &operator=(const List &source) {
+            if(&source!=this) {
                 List *list=this;
-                for(const List *it=&other;it!=0;it=it->_next) {
+                if(list->_next!=0)
+                    delete list->_next;
+                for(const List *it=&source;it!=0;it=it->_next) {
                     list->_pointer=it->_pointer;
                     if(it->_next!=0) {
                         list->_next=new List;
@@ -56,8 +58,8 @@ template <class T> class List {
         /*! Print method.
           * Print the list on a single line on the standard error output.
           */
-        void print() {
-            for(List *it=this;it!=0;it=it->_next)
+        void print() const {
+            for(const List *it=this;it!=0;it=it->_next)
                 std::cerr << it->_pointer << "->";
             std::cerr << "0";
         };
@@ -107,9 +109,9 @@ template <class T> class List {
           * Merge the source List into the left hand side List, using the append
           * method.
           */
-        void merge(List &other) {
-            if(other._pointer!=0) {
-                for(List *it=&other;it!=0;it=it->_next)
+        void merge(const List &source) {
+            if(source._pointer!=0) {
+                for(const List *it=&source;it!=0;it=it->_next)
                     append(*(it->_pointer));
             }
         };
@@ -117,9 +119,9 @@ template <class T> class List {
           * It returns true if the two lists have at least one common element,
           * false otherwise.
           */
-        bool isConnected(List &other) {
-            for(List *it=this;it!=0;it=it->_next)
-                for(List *tmp=&other;tmp!=0;tmp=tmp->_next)
+        bool isConnected(const List &other) const {
+            for(const List *it=this;it!=0;it=it->_next)
+                for(const List *tmp=&other;tmp!=0;tmp=tmp->_next)
                     if(it->_pointer==tmp->_pointer)
                         return true;
             return false;
@@ -127,26 +129,26 @@ template <class T> class List {
         /*! Computes the size of the list.
           * (0 for empty list).
           */
-        int size() {
+        int size() const {
             int res=0;
-            for(List *it=this;it!=0;it=it->_next)
+            for(const List *it=this;it!=0;it=it->_next)
                 if(it->_pointer!=0)
                     res++;
             return res;
         };
         /*! Indicates if an item belongs to the list. */
-        bool isMember(const T &other) {
+        bool isMember(const T &other) const {
             if(_pointer==0)
                 return false;
-            for(List *it=this;it!=0;it=it->_next)
+            for(const List *it=this;it!=0;it=it->_next)
                 if(it->_pointer==&other)
                     return true;
             return false;
         };
         /*! Return a pointer to the current item. */
-        T *pointer() { return _pointer; };
+        T *pointer() const { return _pointer; };
         /*! Return a pointer to the next list object. */
-        List *next() { return _next; };
+        List *next() const { return _next; };
         /*! Set the pointer to the current item. */
         void setPointer(T *pointer) { _pointer=pointer; };
         /*! Set the pointer to the next list object. */
