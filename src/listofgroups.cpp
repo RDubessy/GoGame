@@ -2,15 +2,15 @@
 #include "list.h"
 #include "stone.h"
 #include "listofgroups.h"
-void ListOfGroups::print() {
-    for(List<Group> *it=this;it!=0;it=it->next()) {
+void ListOfGroups::print() const {
+    for(const List<Group> *it=this;it!=0;it=it->next()) {
         std::cerr << it->pointer() << ": ";
         if(it->pointer()!=0)
             it->pointer()->print();
         std::cerr << "\n";
     }
 }
-bool ListOfGroups::add(Stone &stone,List<Stone> &freedom,List<Stone> &jail) {
+bool ListOfGroups::add(Stone &stone, const List<Stone> &freedom, const List<Stone> &jail) {
     if(pointer()==0) {
         Group *group=new Group;
         setPointer(group);
@@ -41,10 +41,10 @@ void ListOfGroups::jail(Stone &stone) {
         it->pointer()->jail(stone);
     return;
 }
-void ListOfGroups::freed(List<Stone> *stones) {
+void ListOfGroups::freed(const List<Stone> *stones) {
     if(pointer()==0)
         return;
-    for(List<Group> *it=this;it!=0;it=it->next())
+    for(const List<Group> *it=this;it!=0;it=it->next())
         it->pointer()->freed(stones);
     return;
 }

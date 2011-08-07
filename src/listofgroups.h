@@ -12,11 +12,11 @@ class ListOfGroups : public List<Group> {
         /*! Default (and trivial) constructor. */
         ListOfGroups() : List<Group>() { };
         /*! Print method. */
-        void print();
+        void print() const;
         /*! This method add a stone to the list of groups.
           * It keeps track of the stones degrees of freedom and jailed nodes.
           */
-        bool add(Stone &stone,List<Stone> &freedom,List<Stone> &jail);
+        bool add(Stone &stone, const List<Stone> &freedom, const List<Stone> &jail);
         /*! This method signals to all groups in the list that a node has been
           * taken by the oponent and is jailed.
           */
@@ -24,7 +24,7 @@ class ListOfGroups : public List<Group> {
         /*! This method signals to all groups in the list that a list of nodes
           * have been freed.
           */
-        void freed(List<Stone> *stones);
+        void freed(const List<Stone> *stones);
 };
 #endif // LISTOFGROUPS_H
 /* listofgroups.h */
