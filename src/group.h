@@ -43,7 +43,8 @@ class Group {
           * freedom.
           */
         void jail(Stone &stone);
-        /*!
+        /*! Remove all stones in the list that matches jailed node from jail
+          * list and convert them to degrees of freedom.
           */
         void freed(const List<Stone> *stones);
         /*! Ensures that all the stones in the group have the same (and only)
