@@ -7,9 +7,9 @@ template <class T> class List {
             _pointer=0;
             _next=0;
         };
-        List(const List &other) {
+        List(const List &source) {
             List *list=this;
-            for(const List *it=&other;it!=0;it=it->_next) {
+            for(const List *it=&source;it!=0;it=it->_next) {
                 list->_pointer=it->_pointer;
                 if(it->_next!=0) {
                     list->_next=new List;
@@ -18,10 +18,12 @@ template <class T> class List {
             }
             list->_next=0;
         };
-        List &operator=(const List &other) {
-            if(&other!=this) {
+        List &operator=(const List &source) {
+            if(&source!=this) {
                 List *list=this;
-                for(const List *it=&other;it!=0;it=it->_next) {
+                if(list->_next!=0)
+                    delete list->_next;
+                for(const List *it=&source;it!=0;it=it->_next) {
                     list->_pointer=it->_pointer;
                     if(it->_next!=0) {
                         list->_next=new List;
@@ -37,8 +39,8 @@ template <class T> class List {
             if(_next!=0)
                 delete _next;
         };
-        void print() {
-            for(List *it=this;it!=0;it=it->_next)
+        void print() const {
+            for(const List *it=this;it!=0;it=it->_next)
                 std::cerr << it->_pointer << "->";
             std::cerr << "0";
         };
@@ -77,36 +79,36 @@ template <class T> class List {
             }
             return res;
         };
-        void merge(List &other) {
-            if(other._pointer!=0) {
-                for(List *it=&other;it!=0;it=it->_next)
+        void merge(const List &source) {
+            if(source._pointer!=0) {
+                for(const List *it=&source;it!=0;it=it->_next)
                     append(*(it->_pointer));
             }
         };
-        bool isConnected(List &other) {
-            for(List *it=this;it!=0;it=it->_next)
-                for(List *tmp=&other;tmp!=0;tmp=tmp->_next)
+        bool isConnected(const List &other) const {
+            for(const List *it=this;it!=0;it=it->_next)
+                for(const List *tmp=&other;tmp!=0;tmp=tmp->_next)
                     if(it->_pointer==tmp->_pointer)
                         return true;
             return false;
         };
-        int size() {
+        int size() const {
             int res=0;
-            for(List *it=this;it!=0;it=it->_next)
+            for(const List *it=this;it!=0;it=it->_next)
                 if(it->_pointer!=0)
                     res++;
             return res;
         };
-        bool isMember(const T &other) {
+        bool isMember(const T &other) const {
             if(_pointer==0)
                 return false;
-            for(List *it=this;it!=0;it=it->_next)
+            for(const List *it=this;it!=0;it=it->_next)
                 if(it->_pointer==&other)
                     return true;
             return false;
         };
-        T *pointer() { return _pointer; };
-        List *next() { return _next; };
+        T *pointer() const { return _pointer; };
+        List *next() const { return _next; };
         void setPointer(T *pointer) { _pointer=pointer; };
         void setNext(List *next) { _next=next; };
     private:
