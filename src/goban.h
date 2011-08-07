@@ -14,7 +14,7 @@ class Goban {
         /*! Destructor. */
         ~Goban();
         /*! Print method. */
-        void print();
+        void print() const;
         /*! Add a stone to the Goban method.
           * This is the main method for the gameplay.
           * It checks if the proposed node is valid, add the stone and updates

@@ -18,7 +18,7 @@ Goban::~Goban() {
         delete[] _goban[i];
     delete[] _goban;
 }
-void Goban::print() {
+void Goban::print() const {
     for(int i=0;i<_size;i++) {
         for(int j=0;j<_size;j++)
             std::cerr << _goban[i][j].colour();
