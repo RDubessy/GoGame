@@ -25,6 +25,8 @@ class ListOfGroups : public List<Group> {
           * have been freed.
           */
         void freed(const List<Stone> *stones);
+        /*! Merges all the connected groups. */
+        void simplify();
 };
 #endif // LISTOFGROUPS_H
 /* listofgroups.h */

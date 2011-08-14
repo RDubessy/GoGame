@@ -55,4 +55,13 @@ bool Group::hasTwoEyes() const {
     }
     return (eyes>1);
 }
+bool Group::isConnected(Group &other) const {
+    return _stones.isConnected(*(other.stones()));
+}
+void Group::merge(Group &other) {
+    _stones.merge(other._stones);
+    _freedom.merge(other._freedom);
+    _jail.merge(other._jail);
+    return;
+}
 /* group.cpp */

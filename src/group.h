@@ -62,6 +62,8 @@ class Group {
         bool &isAlive() { return _isAlive; };
         /*! Return the _isAlive property of the group. */
         bool isAlive() const { return _isAlive; };
+        bool isConnected(Group &other) const;
+        void merge(Group &other);
     private:
         List<Stone> _stones;  //!< List of stones belonging to the group.
         List<Stone> _freedom; //!< List of degrees of freedom of the group.

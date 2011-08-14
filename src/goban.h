@@ -21,8 +21,6 @@ class Goban {
           * all the groups, freedom, etc... properties.
           */
         bool addStone(int i, int j, char colour);
-        /*! Merges all the connected groups. */
-        void merge(ListOfGroups &other);
         /*! Remove all the dead groups from the goban and returns the number of
           * captured stones.
           */

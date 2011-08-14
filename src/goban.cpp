@@ -74,33 +74,18 @@ bool Goban::addStone(int i, int j, char colour) {
     }
     if(colour=='b') {
         _black.add(_goban[i][j],freedom,jail);
-        merge(_black);
+        _black.simplify();
         _white.jail(_goban[i][j]);
         _whiteCaptured+=dead(_white,_black);
     } else {
         _white.add(_goban[i][j],freedom,jail);
-        merge(_white);
+        _white.simplify();
         _black.jail(_goban[i][j]);
         _blackCaptured+=dead(_black,_white);
     }
     setGroup(_white);
     setGroup(_black);
     return true;
-}
-void Goban::merge(ListOfGroups &other) {
-    for(List<Group> *it=&other;it!=0;it=it->next()) {
-        Group *g1=it->pointer();
-        for(List<Group> *tmp=it->next();tmp!=0;tmp=tmp->next()) {
-            Group *g2=tmp->pointer();
-            if(g1->stones()->isConnected(*(g2->stones()))) {
-                g1->stones()->merge(*(g2->stones()));
-                g1->freedom()->merge(*(g2->freedom()));
-                g1->jail()->merge(*(g2->jail()));
-                other.remove(*g2);
-            }
-        }
-    }
-    return;
 }
 int Goban::dead(ListOfGroups &other,ListOfGroups &freed, bool isAtari) {
     int res=0;
@@ -167,7 +152,7 @@ void Goban::buildTerritory(ListOfGroups &territory) {
                 territory.add(_goban[i][j],white,black);
                 //Add stone to territory
                 //Merge
-                merge(territory);
+                territory.simplify();
             }
         }
     }

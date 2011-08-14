@@ -48,4 +48,17 @@ void ListOfGroups::freed(const List<Stone> *stones) {
         it->pointer()->freed(stones);
     return;
 }
+void ListOfGroups::simplify() {
+    for(List<Group> *it=this;it!=0;it=it->next()) {
+        Group *g1=it->pointer();
+        for(List<Group> *tmp=it->next();tmp!=0;tmp=tmp->next()) {
+            Group *g2=tmp->pointer();
+            if(g1->isConnected(*g2)) {
+                g1->merge(*g2);
+                remove(*g2);
+            }
+        }
+    }
+    return;
+}
 /* listofgroups.cpp */
