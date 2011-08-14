@@ -61,4 +61,20 @@ void ListOfGroups::simplify() {
     }
     return;
 }
+int ListOfGroups::dead(ListOfGroups &freed, bool isAtari) {
+    int res=0;
+    if(pointer()!=0) {
+        for(List<Group> *it=this;it!=0;it=it->next()) {
+            Group *g1=it->pointer();
+            if(g1->isDead() || (isAtari && g1->freedom()->size()==1)) {
+                freed.freed(g1->stones());
+                for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
+                    tmp->pointer()->colour()='.';
+                res+=g1->stones()->size();
+                remove(*g1);
+            }
+        }
+    }
+    return res;
+}
 /* listofgroups.cpp */

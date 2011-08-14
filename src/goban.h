@@ -21,10 +21,6 @@ class Goban {
           * all the groups, freedom, etc... properties.
           */
         bool addStone(int i, int j, char colour);
-        /*! Remove all the dead groups from the goban and returns the number of
-          * captured stones.
-          */
-        int dead(ListOfGroups &other,ListOfGroups &freed, bool isAtari=false);
         /*! Access the stone's grid. */
         Stone **stones() { return _goban; };
         /*! Returns the number of captured stones by the concerned player. */

@@ -27,6 +27,10 @@ class ListOfGroups : public List<Group> {
         void freed(const List<Stone> *stones);
         /*! Merges all the connected groups. */
         void simplify();
+        /*! Remove all the dead groups from the goban and returns the number of
+          * captured stones.
+          */
+        int dead(ListOfGroups &freed, bool isAtari=false);
 };
 #endif // LISTOFGROUPS_H
 /* listofgroups.h */

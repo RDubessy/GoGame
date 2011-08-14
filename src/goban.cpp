@@ -76,32 +76,16 @@ bool Goban::addStone(int i, int j, char colour) {
         _black.add(_goban[i][j],freedom,jail);
         _black.simplify();
         _white.jail(_goban[i][j]);
-        _whiteCaptured+=dead(_white,_black);
+        _whiteCaptured+=_white.dead(_black);
     } else {
         _white.add(_goban[i][j],freedom,jail);
         _white.simplify();
         _black.jail(_goban[i][j]);
-        _blackCaptured+=dead(_black,_white);
+        _blackCaptured+=_black.dead(_white);
     }
     setGroup(_white);
     setGroup(_black);
     return true;
-}
-int Goban::dead(ListOfGroups &other,ListOfGroups &freed, bool isAtari) {
-    int res=0;
-    if(other.pointer()!=0) {
-        for(List<Group> *it=&other;it!=0;it=it->next()) {
-            Group *g1=it->pointer();
-            if(g1->isDead() || (isAtari && g1->freedom()->size()==1)) {
-                freed.freed(g1->stones());
-                for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
-                    tmp->pointer()->colour()='.';
-                res+=g1->stones()->size();
-                other.remove(*g1);
-            }
-        }
-    }
-    return res;
 }
 int Goban::score(const char color) const {
     if(color=='w')
@@ -160,8 +144,8 @@ void Goban::buildTerritory(ListOfGroups &territory) {
 }
 void Goban::endGame(int &white, int &black, int &dame) {
     //Remove atari
-    _whiteCaptured+=dead(_white,_black,true);
-    _blackCaptured+=dead(_black,_white,true);
+    _whiteCaptured+=_white.dead(_black,true);
+    _blackCaptured+=_black.dead(_white,true);
     //Build territories
     ListOfGroups territory;
     buildTerritory(territory);
