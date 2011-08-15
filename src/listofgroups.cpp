@@ -77,4 +77,58 @@ int ListOfGroups::dead(ListOfGroups &freed, bool isAtari) {
     }
     return res;
 }
+void ListOfGroups::setGroup() const {
+    if(pointer()==0)
+        return;
+    for(const List<Group> *it=this;it!=0;it=it->next())
+        it->pointer()->setGroup();
+}
+void ListOfGroups::aliveGroup() {
+    if(pointer()==0)
+        return;
+    for(List<Group> *it=this;it!=0;it=it->next()) {
+        Group *g1=it->pointer();
+        if(g1->hasTwoEyes())
+            g1->isAlive()=true;
+    }
+}
+int ListOfGroups::deadGroup(ListOfGroups &freed) {
+    if(pointer()==0)
+        return 0;
+    int res=0;
+    for(List<Group> *it=this;it!=0;it=it->next()) {
+        Group *g1=it->pointer();
+        if(!(g1->isAlive())) {
+            //Count freedom : build list of concerned groups, compare # of freedom
+            List<Group> whiteGroups;
+            List<Group> blackGroups;
+            for(List<Stone> *it1=g1->freedom();it1!=0;it1=it1->next()) {
+                Stone *stone=it1->pointer();
+                for(List<Stone> *it2=stone->group()->freedom();(it2!=0 && it2->pointer()!=0);it2=it2->next()) {
+                    whiteGroups.append(*(it2->pointer()->group()));
+                }
+                for(List<Stone> *it2=stone->group()->jail();(it2!=0 && it2->pointer()!=0);it2=it2->next()) {
+                    blackGroups.append(*(it2->pointer()->group()));
+                }
+            }
+            int white=0;
+            int black=0;
+            for(List<Group> *it1=&whiteGroups;it1!=0;it1=it1->next()) {
+                white+=it1->pointer()->freedom()->size();
+            }
+            for(List<Group> *it1=&blackGroups;it1!=0;it1=it1->next()) {
+                black+=it1->pointer()->freedom()->size();
+            }
+            char color=g1->stones()->pointer()->colour();
+            if((color=='b' && white>black) || (color=='w' && black>white)) {
+                freed.freed(g1->stones());
+                for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
+                    tmp->pointer()->colour()='.';
+                res+=g1->stones()->size();
+                remove(*g1);
+            }
+        }
+    }
+    return res;
+}
 /* listofgroups.cpp */

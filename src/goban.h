@@ -1,6 +1,6 @@
 #ifndef GOBAN_H
 #define GOBAN_H
-#include "listofgroups.h"
+#include "listofshapes.h"
 class Stone;
 /*! This class represents a Goban.
   * Each node of the goban square grid can hold a Stone.
@@ -39,14 +39,6 @@ class Goban {
           * and dame.
           */
         void endGame(int &white, int &black, int &dame);
-        /*! In the endgame remove the dead groups. */
-        int deadGroup(ListOfGroups &other,ListOfGroups &freed);
-        /*! In the endgame mark the groups with two eyes (or enough room to make
-          * two).
-          */
-        void aliveGroup(ListOfGroups &other);
-        /*! Ensure that all stones have the correct group id. */
-        void setGroup(ListOfGroups &other);
     private:
         Stone **_goban;         //!< Square array representing the Goban.
         ListOfGroups _white;    //!< Stones played by the white player.

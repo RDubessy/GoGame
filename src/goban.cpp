@@ -83,20 +83,14 @@ bool Goban::addStone(int i, int j, char colour) {
         _black.jail(_goban[i][j]);
         _blackCaptured+=_black.dead(_white);
     }
-    setGroup(_white);
-    setGroup(_black);
+    _white.setGroup();
+    _black.setGroup();
     return true;
 }
 int Goban::score(const char color) const {
     if(color=='w')
         return _blackCaptured;
     return _whiteCaptured;
-}
-void Goban::setGroup(ListOfGroups &other) {
-    for(List<Group> *it=&other;it!=0;it=it->next()) {
-        Group *g1=it->pointer();
-        g1->setGroup();
-    }
 }
 void Goban::buildTerritory(ListOfGroups &territory) {
     for(int i=0;i<_size;i++) {
@@ -133,14 +127,14 @@ void Goban::buildTerritory(ListOfGroups &territory) {
                         black.append(*stone);
                 }
                 //For this groups, freedom == white, jail == black.
-                territory.add(_goban[i][j],white,black);
                 //Add stone to territory
+                territory.add(_goban[i][j],white,black);
                 //Merge
                 territory.simplify();
             }
         }
     }
-    setGroup(territory);
+    territory.setGroup();
 }
 void Goban::endGame(int &white, int &black, int &dame) {
     //Remove atari
@@ -150,11 +144,11 @@ void Goban::endGame(int &white, int &black, int &dame) {
     ListOfGroups territory;
     buildTerritory(territory);
     //Mark alive groups
-    aliveGroup(_white);
-    aliveGroup(_black);
+    _white.aliveGroup();
+    _black.aliveGroup();
     //Remove captured stones
-    _whiteCaptured+=deadGroup(_white,_black);
-    _blackCaptured+=deadGroup(_black,_white);
+    _whiteCaptured+=_white.deadGroup(_black);
+    _blackCaptured+=_black.deadGroup(_white);
     ListOfGroups finalTerritory;
     buildTerritory(finalTerritory);
     //Scores
@@ -167,54 +161,6 @@ void Goban::endGame(int &white, int &black, int &dame) {
         if(group->freedom()->size()==0) black+=score;
         else if(group->jail()->size()==0) white+=score;
         else dame+=score;
-    }
-}
-int Goban::deadGroup(ListOfGroups &other,ListOfGroups &freed) {
-    int res=0;
-    if(other.pointer()!=0) {
-        for(List<Group> *it=&other;it!=0;it=it->next()) {
-            Group *g1=it->pointer();
-            if(!(g1->isAlive())) {
-                //Count freedom : build list of concerned groups, compare # of freedom
-                List<Group> whiteGroups;
-                List<Group> blackGroups;
-                for(List<Stone> *it1=g1->freedom();it1!=0;it1=it1->next()) {
-                    Stone *stone=it1->pointer();
-                    for(List<Stone> *it2=stone->group()->freedom();(it2!=0 && it2->pointer()!=0);it2=it2->next()) {
-                        whiteGroups.append(*(it2->pointer()->group()));
-                    }
-                    for(List<Stone> *it2=stone->group()->jail();(it2!=0 && it2->pointer()!=0);it2=it2->next()) {
-                        blackGroups.append(*(it2->pointer()->group()));
-                    }
-                }
-                int white=0;
-                int black=0;
-                for(List<Group> *it1=&whiteGroups;it1!=0;it1=it1->next()) {
-                    white+=it1->pointer()->freedom()->size();
-                }
-                for(List<Group> *it1=&blackGroups;it1!=0;it1=it1->next()) {
-                    black+=it1->pointer()->freedom()->size();
-                }
-                char color=g1->stones()->pointer()->colour();
-                if((color=='b' && white>black) || (color=='w' && black>white)) {
-                    freed.freed(g1->stones());
-                    for(List<Stone> *tmp=g1->stones();tmp!=0;tmp=tmp->next())
-                        tmp->pointer()->colour()='.';
-                    res+=g1->stones()->size();
-                    other.remove(*g1);
-                }
-            }
-        }
-    }
-    return res;
-}
-void Goban::aliveGroup(ListOfGroups &other) {
-    if(other.pointer()!=0) {
-        for(List<Group> *it=&other;it!=0;it=it->next()) {
-            Group *g1=it->pointer();
-            if(g1->hasTwoEyes())
-                g1->isAlive()=true;
-        }
     }
 }
 /* goban.cpp */

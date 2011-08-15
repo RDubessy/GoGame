@@ -31,6 +31,14 @@ class ListOfGroups : public List<Group> {
           * captured stones.
           */
         int dead(ListOfGroups &freed, bool isAtari=false);
+        /*! Ensure that all stones have the correct group id. */
+        void setGroup() const;
+        /*! In the endgame mark the groups with two eyes (or enough room to make
+          * two).
+          */
+        void aliveGroup();
+        /*! In the endgame remove the dead groups. */
+        int deadGroup(ListOfGroups &freed);
 };
 #endif // LISTOFGROUPS_H
 /* listofgroups.h */
