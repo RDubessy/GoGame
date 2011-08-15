@@ -14,7 +14,9 @@ SOURCES += src/main.cpp \
     src/stone.cpp \
     src/group.cpp \
     src/listofgroups.cpp \
-    src/goban.cpp
+    src/goban.cpp \
+    src/shape.cpp \
+    src/listofshapes.cpp
 HEADERS += src/qgoban.h \
     src/qgobanview.h \
     src/qstone.h \
@@ -22,5 +24,7 @@ HEADERS += src/qgoban.h \
     src/list.h \
     src/group.h \
     src/listofgroups.h \
-    src/goban.h
+    src/goban.h \
+    src/shape.h \
+    src/listofshapes.h
 FORMS += src/qgoban.ui
