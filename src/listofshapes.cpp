@@ -89,7 +89,7 @@ int ListOfShapes::deadGroup(ListOfShapes &freed) {
         return 0;
     int res=0;
     for(List<Shape> *it=this;it!=0;it=it->next())
-        it->pointer()->deadGroup(freed);
+        res+=it->pointer()->deadGroup(freed);
     return res;
 }
 /* listofshapes.cpp */
