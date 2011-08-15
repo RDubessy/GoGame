@@ -64,4 +64,12 @@ void Group::merge(Group &other) {
     _jail.merge(other._jail);
     return;
 }
+int Group::distance(const Stone &stone) const {
+    int dmin=1000;
+    for(const List<Stone> *it=&_stones;it!=0;it=it->next()) {
+        int d=it->pointer()->distance(stone);
+        if(d<dmin) dmin=d;
+    }
+    return dmin;
+}
 /* group.cpp */

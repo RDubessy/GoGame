@@ -20,8 +20,9 @@ bool ListOfGroups::add(Stone &stone, const List<Stone> &freedom, const List<Ston
     List<Group> *last=this;
     bool inserted=false;
     for(List<Group> *it=this;it!=0;it=it->next()) {
-        if(it->pointer()->nextTo(stone)) {
-            it->pointer()->add(stone,freedom,jail);
+        Group *g=it->pointer();
+        if(g->nextTo(stone)) {
+            g->add(stone,freedom,jail);
             inserted=true;
         }
         last=it;
@@ -131,5 +132,15 @@ int ListOfGroups::deadGroup(ListOfShapes &freed) {
         }
     }
     return res;
+}
+int ListOfGroups::distance(const Stone &stone) const {
+    int dmin=1000;
+    if(pointer()!=0) {
+        for(const List<Group> *it=this;it!=0;it=it->next()) {
+            int d=it->pointer()->distance(stone);
+            if(d<dmin) dmin=d;
+        }
+    }
+    return dmin;
 }
 /* listofgroups.cpp */

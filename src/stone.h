@@ -20,7 +20,7 @@ class Stone {
           * Returns true if the two stones are first order neighbours, false
           * otherwise.
           */
-        bool nextTo(const Stone &stone);
+        bool nextTo(const Stone &stone) const;
         /*! Returns the stone colour. */
         char colour() const { return _colour; };
         /*! Access the stone colour. */
@@ -29,6 +29,7 @@ class Stone {
         Group *group() { return _group; };
         /*! Sets the stone group. */
         void setGroup(Group *group) { _group=group; };
+        int distance(const Stone &stone) const;
     private:
         Group *_group; //!< Pointer to the group of the stone.
         char _colour;  //!< Colour of the stone. Either black ('b') or white ('w').

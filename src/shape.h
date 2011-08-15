@@ -4,6 +4,7 @@
 class Shape : public ListOfGroups {
 public:
     Shape() : ListOfGroups() {};
+    int distance(const Shape &other) const;
 };
 #endif // SHAPE_H
 /* shape.h */

@@ -64,6 +64,7 @@ class Group {
         bool isAlive() const { return _isAlive; };
         bool isConnected(Group &other) const;
         void merge(Group &other);
+        int distance(const Stone &stone) const;
     private:
         List<Stone> _stones;  //!< List of stones belonging to the group.
         List<Stone> _freedom; //!< List of degrees of freedom of the group.

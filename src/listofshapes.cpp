@@ -16,8 +16,9 @@ bool ListOfShapes::add(Stone &stone, const List<Stone> &freedom, const List<Ston
     List<Shape> *last=this;
     bool inserted=false;
     for(List<Shape> *it=this;it!=0;it=it->next()) {
-        if(true) {                                   //TODO add proper condition
-            it->pointer()->add(stone,freedom,jail);
+        ListOfGroups *s=it->pointer();
+        if(s->distance(stone)<6) {
+            s->add(stone,freedom,jail);
             inserted=true;
         }
         last=it;
@@ -47,8 +48,15 @@ void ListOfShapes::freed(const List<Stone> *stones) {
 }
 void ListOfShapes::simplify() {
     for(List<Shape> *it=this;it!=0;it=it->next()) {
-        Shape *s=it->pointer();
-        s->simplify();
+        Shape *s1=it->pointer();
+        for(List<Shape> *tmp=it->next();tmp!=0;tmp=tmp->next()) {
+            Shape *s2=tmp->pointer();
+            if(s1->distance(*s2)<6) {
+                s1->merge(*s2);
+                remove(*s2);
+            }
+        }
+        s1->simplify();
     }
     return;
 }
@@ -84,4 +92,4 @@ int ListOfShapes::deadGroup(ListOfShapes &freed) {
         it->pointer()->deadGroup(freed);
     return res;
 }
-/* listofshape.cpp */
+/* listofshapes.cpp */

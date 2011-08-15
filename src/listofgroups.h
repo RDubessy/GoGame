@@ -40,6 +40,7 @@ class ListOfGroups : public List<Group> {
         void aliveGroup();
         /*! In the endgame remove the dead groups. */
         int deadGroup(ListOfShapes &freed);
+        int distance(const Stone &stone) const;
 };
 #endif // LISTOFGROUPS_H
 /* listofgroups.h */

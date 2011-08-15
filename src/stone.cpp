@@ -8,10 +8,15 @@ void Stone::setCoordinates(int i, int j) {
     _j=j;
     return;
 }
-bool Stone::nextTo(const Stone &stone) {
+bool Stone::nextTo(const Stone &stone) const {
     int i=_i-stone._i;
     int j=_j-stone._j;
     int d=i*i+j*j;
     return (d==1);
+}
+int Stone::distance(const Stone &stone) const {
+    int i=_i-stone._i;
+    int j=_j-stone._j;
+    return i*i+j*j;
 }
 /* stone.ccp */
