@@ -41,8 +41,8 @@ class Goban {
         void endGame(int &white, int &black, int &dame);
     private:
         Stone **_goban;         //!< Square array representing the Goban.
-        ListOfGroups _white;    //!< Stones played by the white player.
-        ListOfGroups _black;    //!< Stones played by the black player.
+        ListOfShapes _white;    //!< Stones played by the white player.
+        ListOfShapes _black;    //!< Stones played by the black player.
         int _whiteCaptured;     //!< Number of stones captured by black.
         int _blackCaptured;     //!< Number of stones captured by white.
         int _size;              //!< Size of the goban (either 9,13,19);

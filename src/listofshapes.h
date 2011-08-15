@@ -10,8 +10,10 @@ public:
     void jail(Stone &stone);
     void freed(const List<Stone> *stones);
     void simplify();
-    int dead(ListOfGroups &freed, bool isAtari=false);
+    int dead(ListOfShapes &freed, bool isAtari=false);
     void setGroup() const;
+    void aliveGroup();
+    int deadGroup(ListOfShapes &freed);
 };
 #endif // LISTOFSHAPES_H
 /* listofshapes.h */

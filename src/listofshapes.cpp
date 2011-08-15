@@ -52,7 +52,7 @@ void ListOfShapes::simplify() {
     }
     return;
 }
-int ListOfShapes::dead(ListOfGroups &freed, bool isAtari) {
+int ListOfShapes::dead(ListOfShapes &freed, bool isAtari) {
     int res=0;
     if(pointer()!=0) {
         for(List<Shape> *it=this;it!=0;it=it->next()) {
@@ -69,5 +69,19 @@ void ListOfShapes::setGroup() const {
         return;
     for(const List<Shape> *it=this;it!=0;it=it->next())
         it->pointer()->setGroup();
+}
+void ListOfShapes::aliveGroup() {
+    if(pointer()==0)
+        return;
+    for(List<Shape> *it=this;it!=0;it=it->next())
+        it->pointer()->aliveGroup();
+}
+int ListOfShapes::deadGroup(ListOfShapes &freed) {
+    if(pointer()==0)
+        return 0;
+    int res=0;
+    for(List<Shape> *it=this;it!=0;it=it->next())
+        it->pointer()->deadGroup(freed);
+    return res;
 }
 /* listofshape.cpp */

@@ -2,6 +2,7 @@
 #define LISTOFGROUPS_H
 #include "group.h"
 class Stone;
+class ListOfShapes;
 template <class T> class List;
 /*! This class represents a list of groups.
   * All the stones of a player are stored as a list of groups.
@@ -30,7 +31,7 @@ class ListOfGroups : public List<Group> {
         /*! Remove all the dead groups from the goban and returns the number of
           * captured stones.
           */
-        int dead(ListOfGroups &freed, bool isAtari=false);
+        int dead(ListOfShapes &freed, bool isAtari=false);
         /*! Ensure that all stones have the correct group id. */
         void setGroup() const;
         /*! In the endgame mark the groups with two eyes (or enough room to make
@@ -38,7 +39,7 @@ class ListOfGroups : public List<Group> {
           */
         void aliveGroup();
         /*! In the endgame remove the dead groups. */
-        int deadGroup(ListOfGroups &freed);
+        int deadGroup(ListOfShapes &freed);
 };
 #endif // LISTOFGROUPS_H
 /* listofgroups.h */

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "list.h"
 #include "stone.h"
+#include "listofshapes.h"
 #include "listofgroups.h"
 void ListOfGroups::print() const {
     for(const List<Group> *it=this;it!=0;it=it->next()) {
@@ -61,7 +62,7 @@ void ListOfGroups::simplify() {
     }
     return;
 }
-int ListOfGroups::dead(ListOfGroups &freed, bool isAtari) {
+int ListOfGroups::dead(ListOfShapes &freed, bool isAtari) {
     int res=0;
     if(pointer()!=0) {
         for(List<Group> *it=this;it!=0;it=it->next()) {
@@ -92,7 +93,7 @@ void ListOfGroups::aliveGroup() {
             g1->isAlive()=true;
     }
 }
-int ListOfGroups::deadGroup(ListOfGroups &freed) {
+int ListOfGroups::deadGroup(ListOfShapes &freed) {
     if(pointer()==0)
         return 0;
     int res=0;
